@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "@/components/ui/use-toast";
 import axios from 'axios';
 
 const LLMAppBuilder = () => {
@@ -23,12 +24,23 @@ const LLMAppBuilder = () => {
       setOutput('');
       setConversation([]);
 
+      const timeoutDuration = 30000; // 30 seconds timeout
+      const source = axios.CancelToken.source();
+      const timeout = setTimeout(() => {
+        source.cancel("Request timed out");
+      }, timeoutDuration);
+
       const response = await axios.post('/generate', {
         apiKey,
         baseUrl,
         modelProvider,
         userInput
+      }, {
+        cancelToken: source.token,
+        timeout: timeoutDuration
       });
+
+      clearTimeout(timeout);
 
       const { taskDescription, output, conversation } = response.data;
       setTaskDescription(taskDescription);
@@ -37,7 +49,22 @@ const LLMAppBuilder = () => {
       setProgress(100);
     } catch (error) {
       console.error('Error:', error);
-      setOutput(`Error: ${error.response?.data?.error || error.message}`);
+      let errorMessage = "An unexpected error occurred";
+      if (axios.isCancel(error)) {
+        errorMessage = "Request timed out. Please try again.";
+      } else if (error.response) {
+        errorMessage = error.response.data.error || error.message;
+      } else if (error.request) {
+        errorMessage = "No response received from the server";
+      }
+      setOutput(`Error: ${errorMessage}`);
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setProgress(100);
     }
   };
 
