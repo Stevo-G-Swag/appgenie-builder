@@ -1,24 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>LLM App Builder</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 50px; }
-    h1 { color: #333; }
-    textarea { width: 100%; height: 100px; margin-bottom: 20px; }
-    button { padding: 10px 20px; font-size: 16px; }
-    #output { margin-top: 30px; white-space: pre-wrap; background: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enhanced LLM App Builder</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <h1>LLM App Builder</h1>
-  <p>Describe the application you want to build:</p>
-  <textarea id="userInput" placeholder="E.g., A simple to-do list app for managing daily tasks"></textarea>
-  <br>
-  <button onclick="generateApp()">Generate App</button>
+<body class="bg-gray-100 p-8">
+  <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold mb-6">Enhanced LLM App Builder</h1>
+    
+    <div class="mb-4">
+      <label for="apiKey" class="block mb-2">API Key:</label>
+      <input type="password" id="apiKey" class="w-full p-2 border rounded" placeholder="Enter your API key">
+    </div>
+    
+    <div class="mb-4">
+      <label for="baseUrl" class="block mb-2">Base URL:</label>
+      <input type="text" id="baseUrl" class="w-full p-2 border rounded" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1">
+    </div>
+    
+    <div class="mb-4">
+      <label for="modelProvider" class="block mb-2">Model Provider:</label>
+      <select id="modelProvider" class="w-full p-2 border rounded">
+        <option value="openai">OpenAI</option>
+        <option value="anthropic">Anthropic</option>
+        <option value="gemini">Google Gemini</option>
+      </select>
+    </div>
+    
+    <div class="mb-4">
+      <label for="userInput" class="block mb-2">Describe the application you want to build:</label>
+      <textarea id="userInput" class="w-full p-2 border rounded h-32" placeholder="E.g., A simple to-do list app for managing daily tasks"></textarea>
+    </div>
+    
+    <button onclick="generateApp()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Generate App</button>
+    
+    <div id="taskDescription" class="mt-6 p-4 bg-gray-200 rounded hidden"></div>
+    <div id="progressBar" class="mt-4 bg-gray-300 rounded-full h-4 hidden">
+      <div id="progressFill" class="bg-blue-500 h-4 rounded-full" style="width: 0%"></div>
+    </div>
+    <div id="output" class="mt-6 p-4 bg-gray-200 rounded whitespace-pre-wrap hidden"></div>
+    
+    <div id="devConversation" class="mt-6 p-4 bg-gray-100 rounded hidden">
+      <h3 class="font-bold mb-2">Development Team Conversation:</h3>
+      <div id="conversationLog"></div>
+    </div>
+    
+    <div id="humanApproval" class="mt-6 p-4 bg-yellow-100 rounded hidden">
+      <h3 class="font-bold mb-2">Human Approval Required:</h3>
+      <p id="approvalRequest"></p>
+      <button onclick="approveAction()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-2">Approve</button>
+      <button onclick="rejectAction()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Reject</button>
+    </div>
+  </div>
 
-  <div id="output"></div>
-
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
