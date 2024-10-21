@@ -28,12 +28,12 @@ async function generateApp() {
     document.getElementById('taskDescription').innerHTML = `<h3 class="font-bold mb-2">Task Description:</h3>${taskDescription}`;
     document.getElementById('output').innerHTML = `<h3 class="font-bold mb-2">Generated Output:</h3><pre>${output}</pre>`;
     
-    displayConversation(conversation);
+    await displayConversationRealTime(conversation);
     
     updateProgress(100);
   } catch (error) {
     console.error('Error:', error);
-    document.getElementById('output').innerHTML = 'An error occurred while generating the application.';
+    document.getElementById('output').innerHTML = `Error: ${error.response?.data?.error || error.message}`;
   }
 }
 
@@ -42,34 +42,38 @@ function updateProgress(percentage) {
   progressFill.style.width = `${percentage}%`;
 }
 
-function displayConversation(conversation) {
+async function displayConversationRealTime(conversation) {
   const conversationLog = document.getElementById('conversationLog');
   conversationLog.innerHTML = '';
   
-  conversation.forEach(message => {
+  for (const message of conversation) {
     const messageElement = document.createElement('div');
     messageElement.className = 'mb-2';
     messageElement.innerHTML = `<strong>${message.role}:</strong> ${message.content}`;
     conversationLog.appendChild(messageElement);
-  });
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate real-time updates
+    updateProgress((conversationLog.children.length / conversation.length) * 100);
+  }
 }
 
 function approveAction() {
-  // Implement approval logic
   document.getElementById('humanApproval').classList.add('hidden');
-  // Continue with the approved action
+  // Implement the logic to continue with the approved action
+  console.log("Action approved");
 }
 
 function rejectAction() {
-  // Implement rejection logic
   document.getElementById('humanApproval').classList.add('hidden');
-  // Handle the rejected action
+  // Implement the logic to handle the rejected action
+  console.log("Action rejected");
 }
 
-// Simulated function to request human approval
 function requestHumanApproval(action) {
   document.getElementById('humanApproval').classList.remove('hidden');
   document.getElementById('approvalRequest').textContent = `Approve action: ${action}`;
 }
 
-// Example usage: requestHumanApproval('Install new dependency');
+// Example usage of human approval
+// document.getElementById('someActionButton').addEventListener('click', () => {
+//   requestHumanApproval('Install new dependency');
+// });
