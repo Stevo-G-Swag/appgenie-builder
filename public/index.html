@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LLM App Builder</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 50px; }
+    h1 { color: #333; }
+    textarea { width: 100%; height: 100px; margin-bottom: 20px; }
+    button { padding: 10px 20px; font-size: 16px; }
+    #output { margin-top: 30px; white-space: pre-wrap; background: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <h1>LLM App Builder</h1>
+  <p>Describe the application you want to build:</p>
+  <textarea id="userInput" placeholder="E.g., A simple to-do list app for managing daily tasks"></textarea>
+  <br>
+  <button onclick="generateApp()">Generate App</button>
+
+  <div id="output"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
